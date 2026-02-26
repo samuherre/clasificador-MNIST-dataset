@@ -6,7 +6,7 @@ import seaborn as sns
 from PIL import Image
 from streamlit_drawable_canvas import st_canvas
 
-from sklearn.datasets import fetch_openml
+from sklearn.datasets import load_digits
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, confusion_matrix
 
@@ -27,9 +27,9 @@ st.write("App interactiva para reconocer números escritos a mano.")
 # -----------------------------
 @st.cache_data
 def load_data():
-    mnist = fetch_openml('mnist_784', version=1)
-    X = mnist.data / 255.0
-    y = mnist.target.astype(int)
+    digits = load_digits()
+    X = digits.data / 16.0
+    y = digits.target
     return X, y
 
 X, y = load_data()
@@ -103,7 +103,7 @@ st.subheader("🖼️ Ejemplo del dataset")
 
 idx = st.slider("Selecciona una imagen", 0, 1000, 0)
 
-img = X_test[idx].values.reshape(28, 28)
+img = X_test[idx].reshape(8, 8)
 
 fig2, ax2 = plt.subplots()
 ax2.imshow(img, cmap='gray')
@@ -136,7 +136,7 @@ if canvas_result.image_data is not None:
     img = canvas_result.image_data[:, :, 0]
 
     # resize a 28x28
-    img_resized = Image.fromarray(img).resize((28, 28))
+    img_resized = Image.fromarray(img).resize((8, 8)) 
     img_array = np.array(img_resized)
 
     # normalizar
